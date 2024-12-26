@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GilsenOshiete!</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <link rel="stylesheet" type="text/css" href="css/table.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Gichan Dictionary</h1>
+        <form id="searchForm">
+            <input type="search" id="query" placeholder="Search...">
+            <select id="language">
+                <option value="" disabled selected>Select a language</option>
+                <option value="mandarin">Mandarin</option>
+                <option value="japanese">Japanese</option>
+            </select>
+            <button type="submit" class="btn-search">Search</button>
+        </form>
+
+        <div class="btn-group">
+            <button id="showAllJapanese" class="btn-show-all-japanese">Show All Japanese</button>
+            <button id="showAllMandarin" class="btn-show-all-mandarin">Show All Mandarin</button>
+        </div>
+
+        <button id="toggleAddForm" class="btn-toggle-add-form">Add New Vocabulary</button>
+
+        <form id="addForm" class="hidden">
+            <h3>Add New Vocabulary</h3>
+            <div class="form-group">
+                <select id="addLanguage">
+                    <option value="" disabled selected>Select a language</option>
+                    <option value="mandarin">Mandarin</option>
+                    <option value="japanese">Japanese</option>
+                </select>
+            </div>
+            <div class="form-group hidden" id="kanjiGroup">
+                <input type="text" id="kanji" placeholder="Kanji/Hanzi">
+            </div>
+            <div class="form-group hidden" id="kanaGroup">
+                <input type="text" id="kana" placeholder="Kana/Pinyin">
+            </div>
+            <div class="form-group hidden" id="meaningGroup">
+                <input type="text" id="meaning" placeholder="Meaning">
+            </div>
+            <div class="form-group hidden" id="partOfSpeechGroup">
+                <input type="text" id="partOfSpeech" placeholder="Part of Speech (Optional)">
+            </div>
+            <div class="form-group hidden" id="exampleSentenceGroup">
+                <input type="text" id="exampleSentence" placeholder="Example Sentence (Optional)">
+            </div>
+            <div class="form-group hidden" id="notesGroup">
+                <input type="text" id="notes" placeholder="Notes (Optional)">
+            </div>
+            <button type="submit" class="btn-add hidden" id="addButton">Add</button>
+        </form>
+
+        <table id="resultsTable" class="hidden">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th id="headerHanzi">Hanzi</th>
+                    <th id="headerPinyin">Pinyin</th>
+                    <th>Meaning</th>
+                    <th>Part of Speech</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="results"></tbody>
+        </table>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

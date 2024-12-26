@@ -1,0 +1,42 @@
+/* Styling untuk label (judul) */
+.form-group label {
+  font-size: 0.9em; /* Ukuran font judul lebih kecil */
+  color: #746e6e; /* Warna font judul sedikit gelap */
+  text-transform: none; /* Tidak ada kapital */
+}
+
+/* Styling untuk paragraf (data) */
+.form-group p {
+  font-size: 1.1em; /* Ukuran font data lebih besar */
+}
+
+/* Styling untuk tombol umum */
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #238636;
+  color: white;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+/* Hover effect untuk tombol umum */
+.btn:hover {
+  background-color: #29903b;
+}
+
+/* Styling untuk tombol berbahaya (delete) */
+.btn-danger {
+  background-color: #d61617;
+}
+
+/* Hover effect untuk tombol berbahaya (delete) */
+.btn-danger:hover {
+  background-color: #aa1213;
+}
+
+/* Styling untuk tombol yang disembunyikan */
+.hidden {
+  display: none;
+}

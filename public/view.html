@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Vocabulary</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <link rel="stylesheet" type="text/css" href="css/form.css">
+    <link rel="stylesheet" type="text/css" href="css/viewstyles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>View Vocabulary</h2>
+        <div id="viewMode">
+            <div class="form-group">
+                <label>ID</label>
+                <p id="viewId"></p>
+            </div>
+            <div class="form-group">
+                <label id="labelKanji">Kanji/Hanzi</label>
+                <p id="viewKanji"></p>
+            </div>
+            <div class="form-group">
+                <label id="labelKana">Kana/Pinyin</label>
+                <p id="viewKana"></p>
+            </div>
+            <div class="form-group">
+                <label>Meaning</label>
+                <p id="viewMeaning"></p>
+            </div>
+            <div class="form-group">
+                <label>Part of Speech</label>
+                <p id="viewPartOfSpeech"></p>
+            </div>
+            <div class="form-group">
+                <label>Example Sentence</label>
+                <p id="viewExampleSentence"></p>
+            </div>
+            <div class="form-group">
+                <label>Notes</label>
+                <p id="viewNotes"></p>
+            </div>
+        </div>
+        <form id="editForm" class="form hidden">
+            <div class="form-group">
+                <label for="editId">ID</label>
+                <input type="text" id="editId" readonly>
+            </div>
+            <div class="form-group">
+                <label for="editKanji" id="editLabelKanji">Kanji/Hanzi</label>
+                <input type="text" id="editKanji">
+            </div>
+            <div class="form-group">
+                <label for="editKana" id="editLabelKana">Kana/Pinyin</label>
+                <input type="text" id="editKana">
+            </div>
+            <div class="form-group">
+                <label for="editMeaning">Meaning</label>
+                <input type="text" id="editMeaning">
+            </div>
+            <div class="form-group">
+                <label for="editPartOfSpeech">Part of Speech</label>
+                <input type="text" id="editPartOfSpeech">
+            </div>
+            <div class="form-group">
+                <label for="editExampleSentence">Example Sentence</label>
+                <input type="text" id="editExampleSentence">
+            </div>
+            <div class="form-group">
+                <label for="editNotes">Notes</label>
+                <input type="text" id="editNotes">
+            </div>
+        </form>
+        <div class="form-actions">
+            <button type="button" id="editButton" class="btn">Edit</button>
+            <button type="button" id="confirmEditButton" class="btn hidden">Confirm Edit</button>
+            <button type="button" id="backButton" class="btn">Back</button>
+            <button type="button" id="deleteButton" class="btn btn-danger">Delete</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            const language = urlParams.get('language');
+            let originalData = {};
+
+            fetch(`/get?id=${id}&language=${language}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.result) {
+                        originalData = {
+                            id: data.result.id,
+                            kanji: data.result.kanji || data.result.hanzi,
+                            kana: data.result.kana || data.result.pinyin,
+                            meaning: data.result.meaning,
+                            partOfSpeech: data.result.part_of_speech,
+                            exampleSentence: data.result.example_sentence,
+                            notes: data.result.notes
+                        };
+                        document.getElementById('viewId').textContent = originalData.id;
+                        document.getElementById('viewKanji').textContent = originalData.kanji;
+                        document.getElementById('viewKana').textContent = originalData.kana;
+                        document.getElementById('viewMeaning').textContent = originalData.meaning;
+                        document.getElementById('viewPartOfSpeech').textContent = originalData.partOfSpeech;
+                        document.getElementById('viewExampleSentence').textContent = originalData.example_sentence;
+                        document.getElementById('viewNotes').textContent = originalData.notes;
+
+                        document.getElementById('editId').value = originalData.id;
+                        document.getElementById('editKanji').value = originalData.kanji;
+                        document.getElementById('editKana').value = originalData.kana;
+                        document.getElementById('editMeaning').value = originalData.meaning;
+                        document.getElementById('editPartOfSpeech').value = originalData.partOfSpeech;
+                        document.getElementById('editExampleSentence').value = originalData.example_sentence;
+                        document.getElementById('editNotes').value = originalData.notes;
+
+                        // Update labels based on language
+                        if (language === 'japanese') {
+                            document.getElementById('labelKanji').textContent = 'Kanji';
+                            document.getElementById('labelKana').textContent = 'Kana';
+                            document.getElementById('editLabelKanji').textContent = 'Kanji';
+                            document.getElementById('editLabelKana').textContent = 'Kana';
+                        } else if (language === 'mandarin') {
+                            document.getElementById('labelKanji').textContent = 'Hanzi';
+                            document.getElementById('labelKana').textContent = 'Pinyin';
+                            document.getElementById('editLabelKanji').textContent = 'Hanzi';
+                            document.getElementById('editLabelKana').textContent = 'Pinyin';
+                        }
+                    } else {
+                        alert('Data not found');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+            document.getElementById('editButton').addEventListener('click', function() {
+                document.getElementById('viewMode').classList.add('hidden');
+                document.getElementById('editForm').classList.remove('hidden');
+                document.getElementById('confirmEditButton').classList.remove('hidden');
+                document.getElementById('deleteButton').classList.add('hidden');
+                this.classList.add('hidden');
+            });
+
+            document.getElementById('confirmEditButton').addEventListener('click', function() {
+                const updatedData = {
+                    id: document.getElementById('editId').value,
+                    language: language,
+                    kanji: document.getElementById('editKanji').value,
+                    kana: document.getElementById('editKana').value,
+                    meaning: document.getElementById('editMeaning').value,
+                    partOfSpeech: document.getElementById('editPartOfSpeech').value,
+                    exampleSentence: document.getElementById('editExampleSentence').value,
+                    notes: document.getElementById('editNotes').value
+                };
+
+                // Check if any data has been updated
+                const isDataUpdated = Object.keys(originalData).some(key => originalData[key] !== updatedData[key]);
+
+                if (!isDataUpdated) {
+                    alert('No data has been updated.');
+                    return;
+                }
+
+                fetch('/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(updatedData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Data updated successfully!');
+                        // Do not automatically go back to the previous page
+                    } else {
+                        alert('Failed to update data.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+
+            document.getElementById('deleteButton').addEventListener('click', function() {
+                if (confirm('Are you sure you want to delete this data?')) {
+                    fetch(`/delete?id=${id}&language=${language}`, {
+                        method: 'DELETE'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Data deleted successfully!');
+                            window.history.back();
+                        } else {
+                            alert('Failed to delete data.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                }
+            });
+
+            document.getElementById('backButton').addEventListener('click', function() {
+                const viewMode = document.getElementById('viewMode');
+                const editForm = document.getElementById('editForm');
+                const editButton = document.getElementById('editButton');
+                const confirmEditButton = document.getElementById('confirmEditButton');
+                const deleteButton = document.getElementById('deleteButton');
+
+                if (!confirmEditButton.classList.contains('hidden')) {
+                    editForm.classList.add('hidden');
+                    viewMode.classList.remove('hidden');
+                    confirmEditButton.classList.add('hidden');
+                    deleteButton.classList.remove('hidden');
+                    editButton.classList.remove('hidden');
+                } else {
+                    window.history.back();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
