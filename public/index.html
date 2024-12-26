@@ -2,13 +2,54 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Gichan Dictionary</title>
-    <link rel="stylesheet" type="text/css" href="/css/styles.css">
-    <link rel="stylesheet" type="text/css" href="/css/table.css">
+    <title>Gilchen Dictionary</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            padding: 8px;
+        }
+        th {
+            background-color: #333333;
+            color: white;
+            text-align: center;
+            font-size: 0.9em;
+        }
+        tr:hover {
+            background-color: #333333;
+        }
+        .btn-view {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+            padding: 0;
+            margin: 0;
+            width: 30px; /* Adjust this value as needed */
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .actions-column {
+            width: 50px; /* Adjust this value as needed */
+        }
+        .word-column {
+            width: 150px; /* Adjust this value as needed */
+        }
+        .reading-column {
+            width: 150px; /* Adjust this value as needed */
+        }
+        .meaning-column {
+            width: 300px; /* Adjust this value as needed */
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="title">Gichan Dictionary</h1>
+        <h1 class="title">Gilchen Dictionary</h1>
         <form id="searchForm">
             <input type="search" id="query" placeholder="Search...">
             <select id="language">
@@ -16,61 +57,61 @@
                 <option value="mandarin">Mandarin</option>
                 <option value="japanese">Japanese</option>
             </select>
-            <button type="submit" class="btn btn-search">Search</button>
+            <div class="btn-group">
+                <button type="submit" class="btn btn-search">Search</button>
+                <button id="showAll" class="btn btn-show-all">Show All</button>
+            </div>
         </form>
 
         <div class="btn-group">
-            <button id="showAllJapanese" class="btn btn-show-all-japanese">Show All Japanese</button>
-            <button id="showAllMandarin" class="btn btn-show-all-mandarin">Show All Mandarin</button>
+            <button id="toggleAddForm" class="btn btn-add-word">Add New Word</button>
+            <button id="toggleAddBatchForm" class="btn btn-add-batch">Add New Word Batch</button>
         </div>
-
-        <button id="toggleAddForm" class="btn btn-toggle-add-form">Add New Vocabulary</button>
 
         <form id="addForm" class="hidden">
             <h3>Add New Vocabulary</h3>
             <div class="form-group">
-                <select id="addLanguage">
-                    <option value="" disabled selected>Select a language</option>
-                    <option value="mandarin">Mandarin</option>
-                    <option value="japanese">Japanese</option>
-                </select>
+                <input type="text" id="word" placeholder="Word">
             </div>
-            <div class="form-group hidden" id="kanjiGroup">
-                <input type="text" id="kanji" placeholder="Kanji/Hanzi">
+            <div class="form-group">
+                <input type="text" id="reading" placeholder="Reading">
             </div>
-            <div class="form-group hidden" id="kanaGroup">
-                <input type="text" id="kana" placeholder="Kana/Pinyin">
-            </div>
-            <div class="form-group hidden" id="meaningGroup">
+            <div class="form-group">
                 <input type="text" id="meaning" placeholder="Meaning">
             </div>
-            <div class="form-group hidden" id="partOfSpeechGroup">
-                <input type="text" id="partOfSpeech" placeholder="Part of Speech (Optional)">
+            <div class="form-group">
+                <input type="text" id="part_of_speech" placeholder="Part of Speech">
             </div>
-            <div class="form-group hidden" id="exampleSentenceGroup">
-                <input type="text" id="exampleSentence" placeholder="Example Sentence (Optional)">
+            <div class="form-group">
+                <input type="text" id="example_sentence" placeholder="Example Sentence">
             </div>
-            <div class="form-group hidden" id="notesGroup">
-                <input type="text" id="notes" placeholder="Notes (Optional)">
+            <div class="form-group">
+                <input type="text" id="notes" placeholder="Notes">
             </div>
-            <button type="submit" class="btn btn-add hidden" id="addButton">Add</button>
+            <button type="submit" class="btn btn-add">Add</button>
+        </form>
+
+        <form id="addBatchForm" class="hidden">
+            <h3>Add New Vocabulary Batch</h3>
+            <div class="form-group">
+                <textarea id="batchInput" rows="10" placeholder="word,reading,meaning,part_of_speech,example_sentence,notes"></textarea>
+            </div>
+            <button type="submit" class="btn btn-add-batch">Add Batch</button>
         </form>
 
         <table id="resultsTable" class="hidden">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th id="headerHanzi">Hanzi</th>
-                    <th id="headerPinyin">Pinyin</th>
-                    <th>Meaning</th>
-                    <th>Part of Speech</th>
-                    <th>Actions</th>
+                    <th>id</th>
+                    <th class="word-column">word</th>
+                    <th class="reading-column">reading</th>
+                    <th class="meaning-column">meaning</th>
+                    <th class="actions-column">actions</th>
                 </tr>
             </thead>
             <tbody id="results"></tbody>
         </table>
     </div>
-
-    <script src="/js/main.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>

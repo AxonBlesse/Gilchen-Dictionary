@@ -1,15 +1,15 @@
 -- CREATE TABLE words_mandarin (
 --   id INTEGER PRIMARY KEY,
---   hanzi TEXT NOT NULL,
---   pinyin TEXT NOT NULL,
+--   word TEXT NOT NULL,
+--   reading TEXT NOT NULL,
 --   meaning TEXT NOT NULL,
 --   part_of_speech TEXT NULL,
 --   example_sentence TEXT NULL,
 --   notes TEXT NULL,
---   UNIQUE (hanzi, pinyin, meaning)
+--   UNIQUE (word, reading, meaning)
 -- );
 
--- INSERT INTO vocabulary (hanzi, pinyin, meaning) 
+-- INSERT INTO words_mandarin (word, reading, meaning) 
 -- VALUES 
 --     ('零', 'líng', 'nol'),
 --     ('一', 'yī', 'satu'),
@@ -25,7 +25,7 @@
 --     ('百', 'bǎi', 'seratus');
 
 -- menghapus tabel
--- DROP TABLE vocabulary;
+-- DROP TABLE words_mandarin;
 
 -- menampilkan isi tabel
 -- SELECT * FROM words_mandarin;
