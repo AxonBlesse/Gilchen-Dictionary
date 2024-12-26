@@ -7,6 +7,12 @@ const app = express();
 app.use(express.json());
 app.use(express.static('public'));
 
+// Tambahkan header CSP
+app.use((req, res, next) => {
+    res.setHeader("Content-Security-Policy", "default-src 'self'; font-src 'self' https://fonts.gstatic.com https://migaku-public-data.migaku.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' https://vercel.live; img-src 'self' data:; connect-src 'self'");
+    next();
+});
+
 // Fungsi untuk mendapatkan path database berdasarkan bahasa
 const getDbPath = (language) => {
     return language === 'mandarin' 
@@ -21,93 +27,22 @@ const getDbConnection = (language) => {
 };
 
 // Endpoint untuk mendapatkan data
-app.get('/get', (req, res) => {
-    const { id, language } = req.query;
-    const table = language === 'mandarin' ? 'words_mandarin' : 'words_japanese';
+app.get('/data', (req, res) => {
+    const language = req.query.language;
     const db = getDbConnection(language);
-    db.get(`SELECT * FROM ${table} WHERE id = ?`, [id], (err, row) => {
+
+    db.all('SELECT * FROM vocabulary', [], (err, rows) => {
         if (err) {
             res.status(500).json({ error: err.message });
             return;
         }
-        res.json({ result: row });
+        res.json({ data: rows });
     });
+
     db.close();
 });
 
-// Endpoint untuk memperbarui data
-app.post('/update', (req, res) => {
-    const { id, language, kanji, kana, meaning, partOfSpeech, exampleSentence, notes } = req.body;
-    const table = language === 'mandarin' ? 'words_mandarin' : 'words_japanese';
-    const columnKanji = language === 'mandarin' ? 'hanzi' : 'kanji';
-    const columnKana = language === 'mandarin' ? 'pinyin' : 'kana';
-    const db = getDbConnection(language);
-    db.run(`UPDATE ${table} SET ${columnKanji} = ?, ${columnKana} = ?, meaning = ?, part_of_speech = ?, example_sentence = ?, notes = ? WHERE id = ?`,
-        [kanji, kana, meaning, partOfSpeech, exampleSentence, notes, id],
-        function (err) {
-            if (err) {
-                res.status(500).json({ error: err.message });
-                return;
-            }
-            res.json({ success: true });
-        }
-    );
-    db.close();
-});
-
-// Endpoint untuk menghapus data
-app.delete('/delete', (req, res) => {
-    const { id, language } = req.query;
-    const table = language === 'mandarin' ? 'words_mandarin' : 'words_japanese';
-    const db = getDbConnection(language);
-    db.run(`DELETE FROM ${table} WHERE id = ?`, [id], function (err) {
-        if (err) {
-            res.status(500).json({ error: err.message });
-            return;
-        }
-        res.json({ success: true });
-    });
-    db.close();
-});
-
-// Endpoint untuk menambahkan data baru
-app.post('/add', (req, res) => {
-    const { language, kanji, kana, meaning, partOfSpeech, exampleSentence, notes } = req.body;
-    const table = language === 'mandarin' ? 'words_mandarin' : 'words_japanese';
-    const columnKanji = language === 'mandarin' ? 'hanzi' : 'kanji';
-    const columnKana = language === 'mandarin' ? 'pinyin' : 'kana';
-    const db = getDbConnection(language);
-    db.run(`INSERT INTO ${table} (${columnKanji}, ${columnKana}, meaning, part_of_speech, example_sentence, notes) VALUES (?, ?, ?, ?, ?, ?)`,
-        [kanji, kana, meaning, partOfSpeech, exampleSentence, notes],
-        function (err) {
-            if (err) {
-                res.status(500).json({ error: err.message });
-                return;
-            }
-            res.json({ success: true });
-        }
-    );
-    db.close();
-});
-
-// Endpoint untuk mencari data
-app.get('/search', (req, res) => {
-    const { query, language } = req.query;
-    const table = language === 'mandarin' ? 'words_mandarin' : 'words_japanese';
-    const columnKanji = language === 'mandarin' ? 'hanzi' : 'kanji';
-    const columnKana = language === 'mandarin' ? 'pinyin' : 'kana';
-    const db = getDbConnection(language);
-    db.all(`SELECT * FROM ${table} WHERE ${columnKanji} LIKE ? OR ${columnKana} LIKE ? OR meaning LIKE ?`, [`%${query}%`, `%${query}%`, `%${query}%`], (err, rows) => {
-        if (err) {
-            console.error('Error executing query:', err.message);
-            res.status(500).json({ error: err.message });
-            return;
-        }
-        res.json({ results: rows });
-    });
-    db.close();
-});
-
+// Jalankan server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
