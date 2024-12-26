@@ -50,22 +50,20 @@
 <body>
     <div class="container">
         <h1 class="title">Gilchen Dictionary</h1>
-        <form id="searchForm">
+        <form id="searchForm" class="form-inline">
             <input type="search" id="query" placeholder="Search...">
             <select id="language">
                 <option value="" disabled selected>Select a language</option>
                 <option value="mandarin">Mandarin</option>
                 <option value="japanese">Japanese</option>
             </select>
-            <div class="btn-group">
-                <button type="submit" class="btn btn-search">Search</button>
-                <button id="showAll" class="btn btn-show-all">Show All</button>
-            </div>
         </form>
 
         <div class="btn-group">
-            <button id="toggleAddForm" class="btn btn-add-word">Add New Word</button>
-            <button id="toggleAddBatchForm" class="btn btn-add-batch">Add New Word Batch</button>
+            <button type="submit" class="btn btn-search">Search</button>
+            <button id="showAll" class="btn btn-show-all">Show All</button>
+            <button id="toggleAddForm" class="btn btn-add-word">Add Word</button>
+            <button id="toggleAddBatchForm" class="btn btn-add-batch">Add Batch</button>
         </div>
 
         <form id="addForm" class="hidden">
