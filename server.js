@@ -1,4 +1,3 @@
-// filepath: /c:/Users/gilan/OneDrive/Documents/My Learning/Programming/GilsenOshiete!/server.js
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
@@ -41,6 +40,11 @@ app.get('/data', (req, res) => {
     });
 
     db.close();
+});
+
+// Endpoint untuk halaman utama
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Jalankan server
