@@ -7,9 +7,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const toggleAddFormButton = document.getElementById('toggleAddForm');
     const toggleAddBatchFormButton = document.getElementById('toggleAddBatchForm');
     const languageSelect = document.getElementById('language');
+    const searchButton = document.querySelector('.btn-search');
+    const showAllButton = document.getElementById('showAll');
     let currentLanguage = null;
 
-    searchForm.addEventListener('submit', function(event) {
+    searchButton.addEventListener('click', function(event) {
         event.preventDefault();
         const query = document.getElementById('query').value;
         const language = languageSelect.value;
@@ -17,6 +19,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!language) {
             alert('Please select a language.');
             return;
+        }
+
+        if (!resultsTable.classList.contains('hidden')) {
+            resultsTable.classList.add('hidden');
         }
 
         fetch(`/data?language=${language}&query=${query}`)
@@ -41,13 +47,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(error => console.error('Error:', error));
+
+        if (!addForm.classList.contains('hidden')) {
+            addForm.classList.add('hidden');
+        }
+        if (!addBatchForm.classList.contains('hidden')) {
+            addBatchForm.classList.add('hidden');
+        }
     });
 
-    document.getElementById('showAll').addEventListener('click', function() {
+    showAllButton.addEventListener('click', function() {
         const language = languageSelect.value;
 
         if (!language) {
             alert('Please select a language.');
+            return;
+        }
+
+        if (!resultsTable.classList.contains('hidden')) {
+            resultsTable.classList.add('hidden');
             return;
         }
 
@@ -136,6 +154,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Data added successfully!');
                 addForm.reset();
                 addForm.classList.add('hidden');
+            } else {
+                alert('Error adding data: ' + data.message);
             }
         })
         .catch(error => console.error('Error:', error));
